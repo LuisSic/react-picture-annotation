@@ -1,5 +1,5 @@
 {
-  "name": "react-picture-annotation",
+  "name": "@blackteam/react-picture-annotation",
   "version": "0.0.0-development",
   "description": "A simple annotation component.",
   "main": "dist/index.js",
@@ -12,7 +12,8 @@
     "commit": "npx git-cz",
     "precommit": "lint-staged",
     "lib:publish": "npm run build && npm publish",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "pub": "git add . && git commit -m \"Updates commonlib\" && npm version patch && npm run build && npm publish"
   },
   "repository": {
     "type": "git",

@@ -1,5 +1,4 @@
 import { IShape, IShapeBase } from "Shape";
-
 export interface ITransformer {
   checkBoundary: (positionX: number, positionY: number) => boolean;
   startTransformation: (positionX: number, positionY: number) => void;

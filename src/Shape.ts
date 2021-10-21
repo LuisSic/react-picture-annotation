@@ -145,6 +145,7 @@ export class RectShape implements IShape {
     canvas2D.strokeRect(x, y, width, height);
     canvas2D.restore();
     if (selected) {
+      canvas2D.save();
       canvas2D.fillStyle = shapeBackground;
       canvas2D.fillRect(x, y, width, height);
     } else {
