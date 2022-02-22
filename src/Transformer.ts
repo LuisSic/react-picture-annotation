@@ -1,4 +1,4 @@
-import { IShape, IShapeBase } from "Shape";
+import { IShape, IShapeBase, IRotation } from "Shape";
 export interface ITransformer {
   checkBoundary: (positionX: number, positionY: number) => boolean;
   startTransformation: (positionX: number, positionY: number) => void;
@@ -6,8 +6,10 @@ export interface ITransformer {
   paint: (
     canvas2D: CanvasRenderingContext2D,
     calculateTruePosition: (shapeData: IShapeBase) => IShapeBase,
-    scale: number
+    scale: number,
+    rotationData: IRotation
   ) => void;
+  shapeId: string;
 }
 
 export default class Transformer implements ITransformer {
@@ -17,6 +19,13 @@ export default class Transformer implements ITransformer {
 
   private get nodeWidth() {
     return this.shape.shapeStyle.transformerSize / this.scale;
+  }
+
+  /**
+   * get shapeId
+   */
+  public get shapeId(): string {
+    return this.shape.getAnnotationData().id;
   }
 
   constructor(shape: IShape, scale: number) {
@@ -50,7 +59,8 @@ export default class Transformer implements ITransformer {
   public paint = (
     canvas2D: CanvasRenderingContext2D,
     calculateTruePosition: (shapeData: IShapeBase) => IShapeBase,
-    scale: number
+    scale: number,
+    rotationData: IRotation
   ) => {
     this.scale = scale;
 
@@ -65,6 +75,10 @@ export default class Transformer implements ITransformer {
         width: this.nodeWidth,
         height: this.nodeWidth,
       });
+
+      canvas2D.translate(x + width / 2, y + height / 2);
+      canvas2D.rotate(rotationData.degrees * (Math.PI / 180));
+      canvas2D.translate(-(x + width / 2), -(y + height / 2));
       canvas2D.fillRect(x, y, width, height);
     }
 

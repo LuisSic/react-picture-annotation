@@ -46,6 +46,10 @@ storiesOf("Hello World", module)
         });
       };
 
+      const onFinish = (data: IAnnotation) => {
+        return;
+      };
+
       useEffect(() => {
         window.addEventListener("resize", onResize);
         return () => {
@@ -61,6 +65,7 @@ storiesOf("Hello World", module)
           onChange={(data) => setAnnotationData(data)}
           selectedId={selectedId}
           onSelect={(e) => setSelectedId(e)}
+          onFinish={(e) => onFinish(e)}
           annotationStyle={{
             ...defaultShapeStyle,
             shapeStrokeStyle: "#2193ff",
@@ -74,6 +79,7 @@ storiesOf("Hello World", module)
               {...{ value, onChange, onDelete }}
             />
           )}
+          rotation={Math.PI / 2}
         />
       );
     };

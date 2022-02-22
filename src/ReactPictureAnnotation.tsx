@@ -20,6 +20,7 @@ interface IReactPictureAnnotationProps {
   marginWithInput: number;
   onChange: (annotationData: IAnnotation[]) => void;
   onSelect: (id: string | null) => void;
+  onFinish: (data: IAnnotation) => void;
   width: number;
   height: number;
   image: string;
@@ -30,6 +31,13 @@ interface IReactPictureAnnotationProps {
     onChange: (value: string) => void,
     onDelete: () => void
   ) => React.ReactElement;
+  rotation: number;
+  /*   zoomIn: number;
+  zoomOut?: number;
+  offset: {
+    x: number;
+    y: number;
+  }; */
 }
 
 interface IStageState {
@@ -43,10 +51,7 @@ const defaultState: IStageState = {
   originX: 0,
   originY: 0,
 };
-
-export default class ReactPictureAnnotation extends React.Component<
-  IReactPictureAnnotationProps
-> {
+export default class ReactPictureAnnotation extends React.Component<IReactPictureAnnotationProps> {
   public static defaultProps = {
     marginWithInput: 10,
     scrollSpeed: 0.0005,
@@ -122,10 +127,10 @@ export default class ReactPictureAnnotation extends React.Component<
   };
 
   public componentDidUpdate = (preProps: IReactPictureAnnotationProps) => {
-    const { width, height, image } = this.props;
+    const { width, height, image, rotation } = this.props;
     if (preProps.width !== width || preProps.height !== height) {
       this.setCanvasDPI();
-      this.onShapeChange();
+      this.onShapeChange(this.props.rotation);
       this.onImageChange();
     }
     if (preProps.image !== image) {
@@ -136,6 +141,25 @@ export default class ReactPictureAnnotation extends React.Component<
         this.onImageChange();
       }
     }
+
+    if (preProps.rotation === -1) {
+      this.drawImage(rotation);
+    }
+    /* 
+    if (preProps.rotation !== rotation) {
+      this.cleanImage();
+      this.drawImage(rotation);
+    } */
+
+    /*  if (preProps.zoomIn !== zoomIn && zoomIn !== 0) {
+      console.log('prev in', preProps.zoomIn);
+      console.log('zoomIn', zoomIn);
+      this.onZoomIn(0.1, offset.x, offset.y);
+    } else if (preProps.zoomOut !== zoomOut && zoomOut !== 0) {
+      console.log('prev out', preProps.zoomOut);
+      console.log('zoomOut', zoomOut);
+      this.onZoomOut(0.1, offset.x, offset.y);
+    } */
 
     this.syncAnnotationData();
     this.syncSelectedId();
@@ -157,6 +181,8 @@ export default class ReactPictureAnnotation extends React.Component<
       y: y * scale + originY,
       width: width * scale,
       height: height * scale,
+      rotateX: originX + (x * scale) / 2,
+      rotateY: originY + (y * scale) / 2,
     };
   };
 
@@ -201,7 +227,7 @@ export default class ReactPictureAnnotation extends React.Component<
     this.currentAnnotationState = annotationState;
   };
 
-  public onShapeChange = () => {
+  public onShapeChange = (rotation?: number) => {
     if (this.canvas2D && this.canvasRef.current) {
       this.canvas2D.clearRect(
         0,
@@ -212,16 +238,23 @@ export default class ReactPictureAnnotation extends React.Component<
 
       let hasSelectedItem = false;
 
+      const rotationData = {
+        degrees: rotation ?? 0,
+      };
       for (const item of this.shapes) {
         const isSelected = item.getAnnotationData().id === this.selectedId;
         const { x, y, height } = item.paint(
           this.canvas2D,
           this.calculateShapePosition,
-          isSelected
+          isSelected,
+          rotationData
         );
 
         if (isSelected) {
-          if (!this.currentTransformer) {
+          if (
+            !this.currentTransformer ||
+            this.currentTransformer.shapeId !== item.getAnnotationData().id
+          ) {
             this.currentTransformer = new Transformer(
               item,
               this.scaleState.scale
@@ -233,7 +266,8 @@ export default class ReactPictureAnnotation extends React.Component<
           this.currentTransformer.paint(
             this.canvas2D,
             this.calculateShapePosition,
-            this.scaleState.scale
+            this.scaleState.scale,
+            rotationData
           );
 
           this.setState({
@@ -271,11 +305,11 @@ export default class ReactPictureAnnotation extends React.Component<
           (eachAnnotationData) =>
             new RectShape(
               eachAnnotationData,
-              this.onShapeChange,
+              () => this.onShapeChange(this.props.rotation),
               this.annotationStyle
             )
         );
-        this.onShapeChange();
+        this.onShapeChange(this.props.rotation);
       };
 
       if (annotationData.length !== this.shapes.length) {
@@ -301,7 +335,7 @@ export default class ReactPictureAnnotation extends React.Component<
 
     if (selectedId && selectedId !== this.selectedId) {
       this.selectedId = selectedId;
-      this.onShapeChange();
+      this.onShapeChange(this.props.rotation);
     }
   };
 
@@ -311,7 +345,7 @@ export default class ReactPictureAnnotation extends React.Component<
     );
     if (deleteTarget >= 0) {
       this.shapes.splice(deleteTarget, 1);
-      this.onShapeChange();
+      this.onShapeChange(this.props.rotation);
     }
   };
 
@@ -351,6 +385,7 @@ export default class ReactPictureAnnotation extends React.Component<
     this.cleanImage();
     if (this.imageCanvas2D && this.imageCanvasRef.current) {
       if (this.currentImageElement) {
+        // this.drawImage(this.props.rotation, isFirstTime);
         const { originX, originY, scale } = this.scaleState;
         this.imageCanvas2D.drawImage(
           this.currentImageElement,
@@ -370,9 +405,14 @@ export default class ReactPictureAnnotation extends React.Component<
           if (!isNaN(imageNodeRatio) && !isNaN(canvasNodeRatio)) {
             if (imageNodeRatio < canvasNodeRatio) {
               const scale = canvasWidth / width;
-              this.scaleState = {
+              /* this.scaleState = {
                 originX: 0,
                 originY: (canvasHeight - scale * height) / 2,
+                scale,
+              }; */
+              this.scaleState = {
+                originX: (canvasWidth - scale * width) / 2,
+                originY: 0,
                 scale,
               };
             } else {
@@ -385,13 +425,56 @@ export default class ReactPictureAnnotation extends React.Component<
             }
           }
           this.onImageChange();
-          this.onShapeChange();
+          this.onShapeChange(this.props.rotation);
         });
         nextImageNode.alt = "";
         nextImageNode.src = this.props.image;
       }
     }
   };
+
+  private rotationImage = (rotation: number) => {
+    if (
+      !this.imageCanvas2D ||
+      !this.currentImageElement ||
+      !this.imageCanvasRef.current
+    ) {
+      return;
+    }
+    this.cleanImage();
+    const { scale, originX, originY } = this.scaleState;
+
+    this.imageCanvas2D.save();
+
+    const positionX = (scale * this.currentImageElement.width) / 2;
+    const positionY = (scale * this.currentImageElement.height) / 2;
+
+    this.imageCanvas2D.translate(originX + positionX, originY + positionY);
+    this.imageCanvas2D.rotate(rotation * (Math.PI / 180));
+
+    this.imageCanvas2D.drawImage(
+      this.currentImageElement,
+      -positionX,
+      -positionY,
+      this.currentImageElement.width * scale,
+      this.currentImageElement.height * scale
+    );
+    this.imageCanvas2D.restore();
+  };
+  private drawImage = (rotation: number) => {
+    requestAnimationFrame(() => {
+      this.rotationImage(rotation);
+      this.onShapeChange(rotation);
+    });
+  };
+
+  /*   private rotateLeft = () => {
+    this.drawImage(-Math.PI / 2);
+  };
+
+  private rotateRight = () => {
+    this.drawImage(Math.PI / 2);
+  }; */
 
   private onMouseDown: MouseEventHandler<HTMLCanvasElement> = (event) => {
     const { offsetX, offsetY } = event.nativeEvent;
@@ -412,7 +495,7 @@ export default class ReactPictureAnnotation extends React.Component<
   };
 
   private onMouseUp: MouseEventHandler<HTMLCanvasElement> = () => {
-    this.currentAnnotationState.onMouseUp();
+    this.currentAnnotationState.onMouseUp(this.props.onFinish);
   };
 
   private onMouseLeave: MouseEventHandler<HTMLCanvasElement> = () => {
@@ -449,8 +532,60 @@ export default class ReactPictureAnnotation extends React.Component<
     this.setState({ imageScale: this.scaleState });
 
     requestAnimationFrame(() => {
+      this.onShapeChange(this.props.rotation);
+      this.onImageChange();
+    });
+  };
+
+  /*   private onZoomIn = (scaleValue: number, offsetX: number, offsetY: number) => {
+    this.scaleState.scale += scaleValue;
+
+    if (this.scaleState.scale > 10) {
+      this.scaleState.scale = 10;
+    }
+    if (this.scaleState.scale < 0.1) {
+      this.scaleState.scale = 0.1;
+    }
+    const { scale: preScale } = this.scaleState;
+    const { originX, originY, scale } = this.scaleState;
+    this.scaleState.originX =
+      offsetX - ((offsetX - originX) / preScale) * scale;
+    this.scaleState.originY =
+      offsetY - ((offsetY - originY) / preScale) * scale;
+
+    this.setState({ imageScale: this.scaleState });
+
+    requestAnimationFrame(() => {
       this.onShapeChange();
       this.onImageChange();
     });
   };
+
+  private onZoomOut = (
+    scaleValue: number,
+    offsetX: number,
+    offsetY: number
+  ) => {
+    this.scaleState.scale -= scaleValue;
+    if (this.scaleState.scale > 10) {
+      this.scaleState.scale = 10;
+    }
+    if (this.scaleState.scale < 0.1) {
+      this.scaleState.scale = 0.1;
+    }
+
+    const { scale: preScale } = this.scaleState;
+    const { originX, originY, scale } = this.scaleState;
+    this.scaleState.originX =
+      offsetX - ((offsetX - originX) / preScale) * scale;
+    this.scaleState.originY =
+      offsetY - ((offsetY - originY) / preScale) * scale;
+
+    this.setState({ imageScale: this.scaleState });
+
+    requestAnimationFrame(() => {
+      this.onShapeChange();
+      this.onImageChange();
+    });
+  }; */
 }
