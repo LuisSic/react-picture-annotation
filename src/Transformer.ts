@@ -8,6 +8,7 @@ export interface ITransformer {
     calculateTruePosition: (shapeData: IShapeBase) => IShapeBase,
     scale: number
   ) => void;
+  shapeId: string;
 }
 
 export default class Transformer implements ITransformer {
@@ -17,6 +18,13 @@ export default class Transformer implements ITransformer {
 
   private get nodeWidth() {
     return this.shape.shapeStyle.transformerSize / this.scale;
+  }
+
+  /**
+   * get shapeId
+   */
+  public get shapeId(): string {
+    return this.shape.getAnnotationData().id;
   }
 
   constructor(shape: IShape, scale: number) {
@@ -65,6 +73,7 @@ export default class Transformer implements ITransformer {
         width: this.nodeWidth,
         height: this.nodeWidth,
       });
+
       canvas2D.fillRect(x, y, width, height);
     }
 

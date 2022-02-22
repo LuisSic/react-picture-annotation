@@ -14,6 +14,7 @@ export const defaultShapeStyle: IShapeStyle = {
   shapeShadowStyle: "hsla(210, 9%, 31%, 0.35)",
   transformerBackground: "#5c7cfa",
   transformerSize: 10,
+  initShapeBackground: "rgba(135, 149, 150, 0.3)",
 };
 
 export interface IShapeStyle {
@@ -29,6 +30,7 @@ export interface IShapeStyle {
   shapeShadowStyle: string;
   transformerBackground: string;
   transformerSize: number;
+  initShapeBackground: string;
 }
 
 export interface IShapeBase {
@@ -36,6 +38,8 @@ export interface IShapeBase {
   y: number;
   width: number;
   height: number;
+  rotateX?: number;
+  rotateY?: number;
 }
 
 export interface IShapeAdjustBase {
@@ -51,6 +55,12 @@ export interface IShapeData extends IShapeBase {
 
 export interface IRectShapeData extends IShapeData {
   type: "RECT";
+}
+
+export interface IRotation {
+  positionX?: number;
+  positionY?: number;
+  degrees: number;
 }
 
 export interface IShape {
@@ -126,45 +136,45 @@ export class RectShape implements IShape {
     canvas2D.save();
 
     const {
-      padding,
       lineWidth,
       shadowBlur,
-      fontSize,
-      fontColor,
-      fontBackground,
-      fontFamily,
       shapeBackground,
       shapeStrokeStyle,
       shapeShadowStyle,
+      initShapeBackground,
     } = this.shapeStyle;
 
     canvas2D.shadowBlur = shadowBlur;
     canvas2D.shadowColor = shapeShadowStyle;
     canvas2D.strokeStyle = shapeStrokeStyle;
     canvas2D.lineWidth = lineWidth;
+
     canvas2D.strokeRect(x, y, width, height);
     canvas2D.restore();
+
     if (selected) {
-      canvas2D.save();
       canvas2D.fillStyle = shapeBackground;
       canvas2D.fillRect(x, y, width, height);
     } else {
-      const { comment } = this.annotationData;
+      canvas2D.fillStyle = initShapeBackground;
+      canvas2D.fillRect(x, y, width, height);
+      /*  const { comment } = this.annotationData;
       if (comment) {
         canvas2D.font = `${fontSize}px ${fontFamily}`;
         const metrics = canvas2D.measureText(comment);
         canvas2D.save();
-        canvas2D.fillStyle = fontBackground;
+        canvas2D.fillStyle = shapeBackground;
         canvas2D.fillRect(
           x,
           y,
           metrics.width + padding * 2,
           fontSize + padding * 2
         );
-        canvas2D.textBaseline = "top";
+        canvas2D.textBaseline = 'top';
         canvas2D.fillStyle = fontColor;
         canvas2D.fillText(comment, x + padding, y + padding);
-      }
+      } else {
+      } */
     }
     canvas2D.restore();
 

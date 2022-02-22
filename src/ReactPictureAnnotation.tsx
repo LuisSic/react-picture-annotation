@@ -20,6 +20,7 @@ interface IReactPictureAnnotationProps {
   marginWithInput: number;
   onChange: (annotationData: IAnnotation[]) => void;
   onSelect: (id: string | null) => void;
+  onFinish: (data: IAnnotation) => void;
   width: number;
   height: number;
   image: string;
@@ -30,6 +31,13 @@ interface IReactPictureAnnotationProps {
     onChange: (value: string) => void,
     onDelete: () => void
   ) => React.ReactElement;
+
+  /*   zoomIn: number;
+  zoomOut?: number;
+  offset: {
+    x: number;
+    y: number;
+  }; */
 }
 
 interface IStageState {
@@ -43,10 +51,7 @@ const defaultState: IStageState = {
   originX: 0,
   originY: 0,
 };
-
-export default class ReactPictureAnnotation extends React.Component<
-  IReactPictureAnnotationProps
-> {
+export default class ReactPictureAnnotation extends React.Component<IReactPictureAnnotationProps> {
   public static defaultProps = {
     marginWithInput: 10,
     scrollSpeed: 0.0005,
@@ -157,6 +162,8 @@ export default class ReactPictureAnnotation extends React.Component<
       y: y * scale + originY,
       width: width * scale,
       height: height * scale,
+      rotateX: originX + (x * scale) / 2,
+      rotateY: originY + (y * scale) / 2,
     };
   };
 
@@ -221,7 +228,10 @@ export default class ReactPictureAnnotation extends React.Component<
         );
 
         if (isSelected) {
-          if (!this.currentTransformer) {
+          if (
+            !this.currentTransformer ||
+            this.currentTransformer.shapeId !== item.getAnnotationData().id
+          ) {
             this.currentTransformer = new Transformer(
               item,
               this.scaleState.scale
@@ -370,9 +380,14 @@ export default class ReactPictureAnnotation extends React.Component<
           if (!isNaN(imageNodeRatio) && !isNaN(canvasNodeRatio)) {
             if (imageNodeRatio < canvasNodeRatio) {
               const scale = canvasWidth / width;
-              this.scaleState = {
+              /* this.scaleState = {
                 originX: 0,
                 originY: (canvasHeight - scale * height) / 2,
+                scale,
+              }; */
+              this.scaleState = {
+                originX: (canvasWidth - scale * width) / 2,
+                originY: 0,
                 scale,
               };
             } else {
@@ -393,6 +408,14 @@ export default class ReactPictureAnnotation extends React.Component<
     }
   };
 
+  /*   private rotateLeft = () => {
+    this.drawImage(-Math.PI / 2);
+  };
+
+  private rotateRight = () => {
+    this.drawImage(Math.PI / 2);
+  }; */
+
   private onMouseDown: MouseEventHandler<HTMLCanvasElement> = (event) => {
     const { offsetX, offsetY } = event.nativeEvent;
     const { positionX, positionY } = this.calculateMousePosition(
@@ -412,6 +435,7 @@ export default class ReactPictureAnnotation extends React.Component<
   };
 
   private onMouseUp: MouseEventHandler<HTMLCanvasElement> = () => {
+    // this.currentAnnotationState.onMouseUp(this.props.onFinish);
     this.currentAnnotationState.onMouseUp();
   };
 
