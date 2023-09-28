@@ -435,8 +435,7 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
   };
 
   private onMouseUp: MouseEventHandler<HTMLCanvasElement> = () => {
-    // this.currentAnnotationState.onMouseUp(this.props.onFinish);
-    this.currentAnnotationState.onMouseUp();
+    this.currentAnnotationState.onMouseUp(this.props.onFinish);
   };
 
   private onMouseLeave: MouseEventHandler<HTMLCanvasElement> = () => {

@@ -1,6 +1,6 @@
 import { ReactPictureAnnotation } from "index";
 import { IShape } from "Shape";
-import { IAnnotationState } from "./AnnotationState";
+import { IAnnotationState, onFinishFunction } from "./AnnotationState";
 import { DefaultAnnotationState } from "./DefaultAnnotationState";
 
 export default class CreatingAnnotationState implements IAnnotationState {
@@ -23,7 +23,7 @@ export default class CreatingAnnotationState implements IAnnotationState {
     }
   };
 
-  public onMouseUp = () => {
+  public onMouseUp = (callback?: onFinishFunction) => {
     const { shapes, onShapeChange, setAnnotationState } = this.context;
     const data = shapes.pop();
     if (
@@ -31,16 +31,23 @@ export default class CreatingAnnotationState implements IAnnotationState {
       data.getAnnotationData().mark.width !== 0 &&
       data.getAnnotationData().mark.height !== 0
     ) {
+      if (typeof callback === "function") {
+        callback(data.getAnnotationData());
+      }
       shapes.push(data);
     } else {
       if (data && this.applyDefaultAnnotationSize(data)) {
         shapes.push(data);
         onShapeChange();
+        if (typeof callback === "function") {
+          callback(data.getAnnotationData());
+        }
       } else {
         this.context.selectedId = null;
         onShapeChange();
       }
     }
+
     setAnnotationState(new DefaultAnnotationState(this.context));
   };
 
