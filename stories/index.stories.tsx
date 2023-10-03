@@ -21,6 +21,7 @@ storiesOf("Hello World", module)
         height: window.innerHeight - 16,
       });
 
+      // Dummy State
       const [, setData] = useState<any>();
 
       const [annotationData, setAnnotationData] = useState<
