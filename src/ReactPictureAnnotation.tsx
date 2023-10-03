@@ -408,10 +408,11 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
           this.imageCanvas2D.translate(canvasWidth / 2, canvasHeight / 2);
           this.imageCanvas2D.rotate(radians); // rotates the image around origin point by used translations
           this.imageCanvas2D.translate(-newOriginX, -newOriginY);
+          this.imageCanvas2D.scale(scale, scale);
           this.imageCanvas2D.drawImage(
             this.currentImageElement,
-            originX * scale,
-            originY * scale
+            originX,
+            originY
             // this.currentImageElement.width * scale,
             // this.currentImageElement.height * scale
           ); // draws the image in the position (imageX, imageY)
