@@ -393,26 +393,29 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
     this.cleanImage();
     if (this.imageCanvas2D && this.imageCanvasRef.current) {
       if (this.currentImageElement) {
-        const { scale } = this.scaleState;
+        const { scale, originX, originY } = this.scaleState;
         if (this.props.degrees) {
           // To rotate the image
-          const { width: canvasWidth, height: canvasHeight } = this.props;
-          const scaleX = canvasWidth / this.currentImageElement.width;
-          const scaleY = canvasHeight / this.currentImageElement.height;
-          const x = (canvasWidth - scaleX * this.currentImageElement.width) / 2;
-          const y =
-            (canvasHeight - scaleY * this.currentImageElement.height) / 2;
-          const originX = x + 50;
-          const originY = y + 50;
+          // const { width: canvasWidth, height: canvasHeight } = this.props;
+          // const scaleX = this.currentImageElement.width;
+          // const scaleY = canvasHeight / this.currentImageElement.height;
+          const x = this.currentImageElement.width * 0.5;
+          const y = this.currentImageElement.height * 0.5;
+          const newOriginX = x + originX;
+          const newOriginY = y + originY;
           const radians = toRadians(this.props.degrees);
           this.imageCanvas2D.save(); // saves current transformation matrix (state)
-          this.imageCanvas2D.translate(+originX, +originY);
+          this.imageCanvas2D.translate(+newOriginX, +newOriginY);
           this.imageCanvas2D.rotate(radians); // rotates the image around origin point by used translations
-          this.imageCanvas2D.translate(-originX, -originY);
-          this.imageCanvas2D.drawImage(this.currentImageElement, 50, 50); // draws the image in the position (imageX, imageY)
+          this.imageCanvas2D.translate(-newOriginX, -newOriginY);
+          this.imageCanvas2D.drawImage(
+            this.currentImageElement,
+            originX,
+            originY
+          ); // draws the image in the position (imageX, imageY)
           this.imageCanvas2D.restore(); //
         } else {
-          const { originX, originY } = this.scaleState;
+          // const { originX, originY } = this.scaleState;
           this.imageCanvas2D.drawImage(
             this.currentImageElement,
             originX,
