@@ -413,8 +413,6 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
             this.currentImageElement,
             originX,
             originY
-            // this.currentImageElement.width * scale,
-            // this.currentImageElement.height * scale
           ); // draws the image in the position (imageX, imageY)
           this.imageCanvas2D.restore(); //
         } else {
