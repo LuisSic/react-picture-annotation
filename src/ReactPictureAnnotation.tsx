@@ -4,7 +4,6 @@ import { IAnnotationState } from "./annotation/AnnotationState";
 import { DefaultAnnotationState } from "./annotation/DefaultAnnotationState";
 import DefaultInputSection from "./DefaultInputSection";
 // import DeleteButton from "./DeleteButton";
-import { toRadians } from "utils/utils";
 import {
   defaultShapeStyle,
   IShape,
@@ -13,6 +12,7 @@ import {
   RectShape,
 } from "./Shape";
 import Transformer, { ITransformer } from "./Transformer";
+import { toRadians } from "./utils/utils";
 
 interface IReactPictureAnnotationProps {
   annotationData?: IAnnotation[];
