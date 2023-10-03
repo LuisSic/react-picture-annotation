@@ -401,8 +401,8 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
           // const scaleY = canvasHeight / this.currentImageElement.height;
           const x = this.currentImageElement.width * 0.5;
           const y = this.currentImageElement.height * 0.5;
-          const newOriginX = x + originX;
-          const newOriginY = y + originY;
+          const newOriginX = x + originX * scale;
+          const newOriginY = y + originY * scale;
           const radians = toRadians(this.props.degrees);
           this.imageCanvas2D.save(); // saves current transformation matrix (state)
           this.imageCanvas2D.translate(+newOriginX, +newOriginY);
