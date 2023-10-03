@@ -1,3 +1,4 @@
+import { toRadians } from "utils/utils";
 import { IAnnotation } from "./Annotation";
 
 export const defaultShapeStyle: IShapeStyle = {
@@ -69,7 +70,8 @@ export interface IShape {
   paint: (
     canvas2D: CanvasRenderingContext2D,
     calculateTruePosition: (shapeData: IShapeBase) => IShapeBase,
-    selected: boolean
+    selected: boolean,
+    degrees: number
   ) => IShapeBase;
   getAnnotationData: () => IAnnotation;
   adjustMark: (adjustBase: IShapeAdjustBase) => void;
@@ -126,7 +128,8 @@ export class RectShape implements IShape {
   public paint = (
     canvas2D: CanvasRenderingContext2D,
     calculateTruePosition: (shapeData: IShapeBase) => IShapeBase,
-    selected: boolean
+    selected: boolean,
+    degrees: number
   ) => {
     const { x, y, width, height } = calculateTruePosition(
       this.annotationData.mark
@@ -149,6 +152,14 @@ export class RectShape implements IShape {
 
     canvas2D.strokeRect(x, y, width, height);
     canvas2D.restore();
+
+    if (degrees) {
+      const radians = toRadians(degrees);
+      canvas2D.save(); // saves current transformation matrix (state)
+      canvas2D.translate(+width / 2, +height / 2);
+      canvas2D.rotate(radians);
+      // canvas2D.translate(-width / 2, -height / 2);
+    }
 
     if (selected) {
       canvas2D.fillStyle = shapeBackground;

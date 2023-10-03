@@ -4,6 +4,7 @@ import { IAnnotationState } from "./annotation/AnnotationState";
 import { DefaultAnnotationState } from "./annotation/DefaultAnnotationState";
 import DefaultInputSection from "./DefaultInputSection";
 // import DeleteButton from "./DeleteButton";
+import { toRadians } from "utils/utils";
 import {
   defaultShapeStyle,
   IShape,
@@ -52,12 +53,6 @@ const defaultState: IStageState = {
   originX: 0,
   originY: 0,
 };
-
-const RADIAN = Math.PI / 180;
-
-function toRadians(degrees: number) {
-  return degrees * RADIAN;
-}
 
 export default class ReactPictureAnnotation extends React.Component<IReactPictureAnnotationProps> {
   public static defaultProps = {
@@ -180,14 +175,8 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
     const newX = x * scale + originX;
     const newY = y * scale + originY;
 
-    let xRotate = newX;
-    let yRotate = newY;
-
-    if (this.props.degrees) {
-      const radians = toRadians(this.props.degrees);
-      xRotate = newX * Math.cos(radians) - newY * Math.sin(radians);
-      yRotate = newX * Math.sin(radians) + newY * Math.cos(radians);
-    }
+    const xRotate = newX;
+    const yRotate = newY;
 
     return {
       x: xRotate,
@@ -256,7 +245,8 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
         const { x, y, height } = item.paint(
           this.canvas2D,
           this.calculateShapePosition,
-          isSelected
+          isSelected,
+          this.props.degrees ?? 0
         );
 
         if (isSelected) {
