@@ -396,8 +396,10 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
         const { scale } = this.scaleState;
         if (this.props.degrees) {
           // To rotate the image
-          const originX = 0.5 * this.currentImageElement.width * scale;
-          const originY = 0.5 * this.currentImageElement.height * scale;
+          const x = 0.5 * this.currentImageElement.width;
+          const y = 0.5 * this.currentImageElement.height;
+          const originX = (x + 50) * scale;
+          const originY = (y + 50) * scale;
           const radians = toRadians(this.props.degrees);
           this.imageCanvas2D.save(); // saves current transformation matrix (state)
           this.imageCanvas2D.translate(+originX, +originY);
