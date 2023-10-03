@@ -406,9 +406,10 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
           const radians = toRadians(this.props.degrees);
           this.imageCanvas2D.save(); // saves current transformation matrix (state)
           this.imageCanvas2D.translate(+newOriginX, +newOriginY);
+          this.imageCanvas2D.scale(scale, scale);
           this.imageCanvas2D.rotate(radians); // rotates the image around origin point by used translations
           this.imageCanvas2D.translate(-newOriginX, -newOriginY);
-          this.imageCanvas2D.scale(scale, scale);
+
           this.imageCanvas2D.drawImage(
             this.currentImageElement,
             originX,
