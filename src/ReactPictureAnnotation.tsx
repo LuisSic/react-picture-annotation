@@ -412,10 +412,6 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
             this.currentImageElement,
             originX,
             originY
-            // this.currentImageElement.width * scale,
-            // this.currentImageElement.height * scale
-            // this.currentImageElement.width * scale,
-            // this.currentImageElement.height * scale
           ); // draws the image in the position (imageX, imageY)
           this.imageCanvas2D.restore(); //
         } else {
@@ -439,16 +435,16 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
           if (!isNaN(imageNodeRatio) && !isNaN(canvasNodeRatio)) {
             if (imageNodeRatio < canvasNodeRatio) {
               const scale = canvasWidth / width;
-              /* this.scaleState = {
+              this.scaleState = {
                 originX: 0,
                 originY: (canvasHeight - scale * height) / 2,
                 scale,
-              }; */
-              this.scaleState = {
+              };
+              /*  this.scaleState = {
                 originX: (canvasWidth - scale * width) / 2,
                 originY: 0,
                 scale,
-              };
+              }; */
             } else {
               const scale = canvasHeight / height;
               this.scaleState = {
