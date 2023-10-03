@@ -24,6 +24,7 @@ interface IReactPictureAnnotationProps {
   width: number;
   height: number;
   image: string;
+  degrees?: number;
   annotationStyle: IShapeStyle;
   defaultAnnotationSize?: number[];
   inputElement: (
@@ -51,11 +52,19 @@ const defaultState: IStageState = {
   originX: 0,
   originY: 0,
 };
+
+const RADIAN = Math.PI / 180;
+
+function toRadians(degrees: number) {
+  return degrees * RADIAN;
+}
+
 export default class ReactPictureAnnotation extends React.Component<IReactPictureAnnotationProps> {
   public static defaultProps = {
     marginWithInput: 10,
     scrollSpeed: 0.0005,
     annotationStyle: defaultShapeStyle,
+    degrees: 0,
     inputElement: (
       value: string,
       onChange: (value: string) => void,
@@ -127,7 +136,7 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
   };
 
   public componentDidUpdate = (preProps: IReactPictureAnnotationProps) => {
-    const { width, height, image } = this.props;
+    const { width, height, image, degrees } = this.props;
     if (preProps.width !== width || preProps.height !== height) {
       this.setCanvasDPI();
       this.onShapeChange();
@@ -140,6 +149,9 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
       } else {
         this.onImageChange();
       }
+    }
+    if (preProps.degrees !== degrees) {
+      this.onImageChange();
     }
 
     this.syncAnnotationData();
@@ -157,13 +169,33 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
   public calculateShapePosition = (shapeData: IShapeBase): IShapeBase => {
     const { originX, originY, scale } = this.scaleState;
     const { x, y, width, height } = shapeData;
+
+    /*  const newX =
+      x * Math.cos((angle * Math.PI) / 180) -
+      y * Math.sin((angle * Math.PI) / 180);
+    const newY =
+      x * Math.sin((angle * Math.PI) / 180) +
+      y * Math.cos((angle * Math.PI) / 180); */
+
+    const newX = x * scale + originX;
+    const newY = y * scale + originY;
+
+    let xRotate = newX;
+    let yRotate = newY;
+
+    if (this.props.degrees) {
+      const radians = toRadians(this.props.degrees);
+      xRotate = newX * Math.cos(radians) - newY * Math.sin(radians);
+      yRotate = newX * Math.sin(radians) + newY * Math.cos(radians);
+    }
+
     return {
-      x: x * scale + originX,
-      y: y * scale + originY,
+      x: xRotate,
+      y: yRotate,
       width: width * scale,
       height: height * scale,
-      rotateX: originX + (x * scale) / 2,
-      rotateY: originY + (y * scale) / 2,
+      // rotateX: originX + (x * scale) / 2,
+      // rotateY: originY + (y * scale) / 2,
     };
   };
 
@@ -361,14 +393,27 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
     this.cleanImage();
     if (this.imageCanvas2D && this.imageCanvasRef.current) {
       if (this.currentImageElement) {
-        const { originX, originY, scale } = this.scaleState;
-        this.imageCanvas2D.drawImage(
-          this.currentImageElement,
-          originX,
-          originY,
-          this.currentImageElement.width * scale,
-          this.currentImageElement.height * scale
-        );
+        const { scale } = this.scaleState;
+        if (this.props.degrees) {
+          const originX = 0.5 * this.currentImageElement.width * scale;
+          const originY = 0.5 * this.currentImageElement.height * scale;
+          const radians = toRadians(this.props.degrees);
+          this.imageCanvas2D.save(); // saves current transformation matrix (state)
+          this.imageCanvas2D.translate(+originX, +originY);
+          this.imageCanvas2D.rotate(radians); // rotates the image around origin point by used translations
+          this.imageCanvas2D.translate(-originX, -originY);
+          this.imageCanvas2D.drawImage(this.currentImageElement, 50, 50); // draws the image in the position (imageX, imageY)
+          this.imageCanvas2D.restore(); //
+        } else {
+          const { originX, originY } = this.scaleState;
+          this.imageCanvas2D.drawImage(
+            this.currentImageElement,
+            originX,
+            originY,
+            this.currentImageElement.width * scale,
+            this.currentImageElement.height * scale
+          );
+        }
       } else {
         const nextImageNode = document.createElement("img");
         nextImageNode.addEventListener("load", () => {

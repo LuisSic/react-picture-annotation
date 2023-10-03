@@ -38,8 +38,6 @@ export interface IShapeBase {
   y: number;
   width: number;
   height: number;
-  rotateX?: number;
-  rotateY?: number;
 }
 
 export interface IShapeAdjustBase {
