@@ -154,7 +154,7 @@ export class RectShape implements IShape {
       const radians = toRadians(degrees);
       const originX = x + width / 2;
       const originY = y + height / 2;
-      canvas2D.save(); // saves current transformation matrix (state)
+      // canvas2D.save(); // saves current transformation matrix (state)
       canvas2D.translate(originX, originY);
       canvas2D.rotate(radians);
       canvas2D.translate(-originX, -originY);
