@@ -150,9 +150,6 @@ export class RectShape implements IShape {
     canvas2D.strokeStyle = shapeStrokeStyle;
     canvas2D.lineWidth = lineWidth;
 
-    canvas2D.strokeRect(x, y, width, height);
-    canvas2D.restore();
-
     if (degrees) {
       const radians = toRadians(degrees);
       canvas2D.save(); // saves current transformation matrix (state)
@@ -160,6 +157,9 @@ export class RectShape implements IShape {
       canvas2D.rotate(radians);
       // canvas2D.translate(-width / 2, -height / 2);
     }
+
+    canvas2D.strokeRect(x, y, width, height);
+    canvas2D.restore();
 
     if (selected) {
       canvas2D.fillStyle = shapeBackground;
