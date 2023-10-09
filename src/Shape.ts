@@ -134,7 +134,7 @@ export class RectShape implements IShape {
     calculateTruePosition: (shapeData: IShapeBase) => IShapeBase,
     selected: boolean,
     degrees: number,
-    image: {
+    _image: {
       width: number;
       height: number;
     }
@@ -166,16 +166,18 @@ export class RectShape implements IShape {
       canvas2D.translate(originX, originY);
       canvas2D.rotate(radians);
       canvas2D.translate(-originX, -originY);
-      const centerX = image.width;
-      const centerY = image.height;
-      const newX =
+      /* const centerX = image.width;
+      const centerY = image.height; */
+      /*  const newX =
         centerX +
         (x - centerX) * Math.cos(radians) -
         (y - centerY) * Math.sin(radians);
+
       const newY =
         centerY +
         (x - centerX) * Math.sin(radians) +
-        (y - centerY) * Math.cos(radians);
+        (y - centerY) * Math.cos(radians); */
+      // console.log('🚀 ~ file: Shape.ts:178 ~ RectShape ~ newY:', newY);
 
       canvas2D.strokeRect(y, x, width, height);
     } else {
