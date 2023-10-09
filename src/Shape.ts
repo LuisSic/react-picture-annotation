@@ -177,7 +177,7 @@ export class RectShape implements IShape {
         (x - centerX) * Math.sin(radians) +
         (y - centerY) * Math.cos(radians);
 
-      canvas2D.strokeRect(newX, newY, width, height);
+      canvas2D.strokeRect(y, x, width, height);
     } else {
       canvas2D.strokeRect(x, y, width, height);
     }
