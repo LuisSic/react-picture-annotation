@@ -71,7 +71,11 @@ export interface IShape {
     canvas2D: CanvasRenderingContext2D,
     calculateTruePosition: (shapeData: IShapeBase) => IShapeBase,
     selected: boolean,
-    degrees: number
+    degrees: number,
+    image: {
+      width: number;
+      height: number;
+    }
   ) => IShapeBase;
   getAnnotationData: () => IAnnotation;
   adjustMark: (adjustBase: IShapeAdjustBase) => void;
@@ -129,7 +133,11 @@ export class RectShape implements IShape {
     canvas2D: CanvasRenderingContext2D,
     calculateTruePosition: (shapeData: IShapeBase) => IShapeBase,
     selected: boolean,
-    degrees: number
+    degrees: number,
+    image: {
+      width: number;
+      height: number;
+    }
   ) => {
     const { x, y, width, height } = calculateTruePosition(
       this.annotationData.mark
@@ -154,14 +162,27 @@ export class RectShape implements IShape {
       const radians = toRadians(degrees);
       const originX = x + width / 2;
       const originY = y + height / 2;
-      // canvas2D.save(); // saves current transformation matrix (state)
+      canvas2D.save(); // saves current transformation matrix (state)
       canvas2D.translate(originX, originY);
       canvas2D.rotate(radians);
       canvas2D.translate(-originX, -originY);
+      const centerX = image.width / 2;
+      const centerY = image.height / 2;
+      const newX =
+        centerX +
+        (x - centerX) * Math.cos(radians) -
+        (y - centerY) * Math.sin(radians);
+      const newY =
+        centerY +
+        (x - centerX) * Math.sin(radians) +
+        (y - centerY) * Math.cos(radians);
+
+      canvas2D.strokeRect(newX, newY, width, height);
+    } else {
+      canvas2D.strokeRect(x, y, width, height);
     }
 
-    canvas2D.strokeRect(x, y, width, height);
-    canvas2D.restore();
+    // canvas2D.restore();
 
     if (selected) {
       canvas2D.fillStyle = shapeBackground;

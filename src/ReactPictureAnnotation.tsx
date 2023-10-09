@@ -246,7 +246,11 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
           this.canvas2D,
           this.calculateShapePosition,
           isSelected,
-          this.props.degrees ?? 0
+          this.props.degrees ?? 0,
+          {
+            width: this.currentImageElement?.width ?? 0,
+            height: this.currentImageElement?.height ?? 0,
+          }
         );
 
         if (isSelected) {
