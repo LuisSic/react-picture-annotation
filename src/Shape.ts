@@ -134,7 +134,7 @@ export class RectShape implements IShape {
     calculateTruePosition: (shapeData: IShapeBase) => IShapeBase,
     selected: boolean,
     degrees: number,
-    _image: {
+    image: {
       width: number;
       height: number;
     }
@@ -157,16 +157,20 @@ export class RectShape implements IShape {
     canvas2D.shadowColor = shapeShadowStyle;
     canvas2D.strokeStyle = shapeStrokeStyle;
     canvas2D.lineWidth = lineWidth;
-    const originX = x + width / 2;
-    const originY = y + height / 2;
+    let newX = x;
+    let newY = y;
     if (degrees) {
+      newX = height + y - image.height;
+      newY = width + x - image.width;
       const radians = toRadians(degrees);
       // const newX = height + y - image.height;
       // const newY = width + x - image.width;
-
-      canvas2D.save(); // saves current transformation matrix (state)
+      const originX = x + width / 2;
+      const originY = y + height / 2;
+      // canvas2D.save(); // saves current transformation matrix (state)
       canvas2D.translate(originX, originY);
       canvas2D.rotate(radians);
+      canvas2D.translate(-originX, -originY);
       /* const centerX = image.width;
       const centerY = image.height; */
       /*  const newX =
@@ -182,19 +186,19 @@ export class RectShape implements IShape {
       // const newX = height + y - image.height;
       // const newY = width + x - image.width;
 
-      canvas2D.strokeRect(x, y, width, height);
+      canvas2D.strokeRect(newX, newY, width, height);
     } else {
-      canvas2D.strokeRect(x, y, width, height);
+      canvas2D.strokeRect(newX, newY, width, height);
     }
 
     // canvas2D.restore();
 
     if (selected) {
       canvas2D.fillStyle = shapeBackground;
-      canvas2D.fillRect(x, y, width, height);
+      canvas2D.fillRect(newX, newY, width, height);
     } else {
       canvas2D.fillStyle = initShapeBackground;
-      canvas2D.fillRect(x, y, width, height);
+      canvas2D.fillRect(newX, newY, width, height);
       /*  const { comment } = this.annotationData;
       if (comment) {
         canvas2D.font = `${fontSize}px ${fontFamily}`;
@@ -213,9 +217,7 @@ export class RectShape implements IShape {
       } else {
       } */
     }
-    if (degrees) {
-      canvas2D.translate(-originX, -originY);
-    }
+
     canvas2D.restore();
 
     return { x, y, width, height };
