@@ -243,8 +243,8 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
       for (const item of this.shapes) {
         const isSelected = item.getAnnotationData().id === this.selectedId;
 
-        const xImage = this.currentImageElement?.width ?? 0 * 0.5;
-        const yImage = this.currentImageElement?.height ?? 0 * 0.5;
+        const xImage = this.currentImageElement?.width ?? 0;
+        const yImage = this.currentImageElement?.height ?? 0;
         const newOriginX = xImage + this.scaleState.originX;
         const newOriginY = yImage + this.scaleState.originY;
 
