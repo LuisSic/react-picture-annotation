@@ -134,7 +134,7 @@ export class RectShape implements IShape {
     calculateTruePosition: (shapeData: IShapeBase) => IShapeBase,
     selected: boolean,
     degrees: number,
-    image: {
+    _image: {
       width: number;
       height: number;
     }
