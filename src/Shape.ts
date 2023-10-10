@@ -160,8 +160,8 @@ export class RectShape implements IShape {
     let newX = x;
     let newY = y;
     if (degrees) {
-      newX = height + y - image.height;
-      newY = width + x - image.width;
+      newX = image.height - (height + y);
+      newY = image.width - (width + x);
       const radians = toRadians(degrees);
       // const newX = height + y - image.height;
       // const newY = width + x - image.width;
