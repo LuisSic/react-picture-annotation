@@ -160,12 +160,14 @@ export class RectShape implements IShape {
 
     if (degrees) {
       const radians = toRadians(degrees);
+      const newX = height + y - image.height;
+      const newY = width + x - image.width;
       const originX = x + width / 2;
       const originY = y + height / 2;
       canvas2D.save(); // saves current transformation matrix (state)
       canvas2D.translate(originX, originY);
       canvas2D.rotate(radians);
-      canvas2D.translate(-originX, -originY);
+      canvas2D.translate(newX, newY);
       /* const centerX = image.width;
       const centerY = image.height; */
       /*  const newX =
@@ -178,10 +180,10 @@ export class RectShape implements IShape {
         (x - centerX) * Math.sin(radians) +
         (y - centerY) * Math.cos(radians); */
       // console.log('🚀 ~ file: Shape.ts:178 ~ RectShape ~ newY:', newY);
-      const newX = height + y - image.height;
-      const newY = width + x - image.width;
+      // const newX = height + y - image.height;
+      // const newY = width + x - image.width;
 
-      canvas2D.strokeRect(newX, newY, width, height);
+      canvas2D.strokeRect(x, y, width, height);
     } else {
       canvas2D.strokeRect(x, y, width, height);
     }
