@@ -162,15 +162,15 @@ export class RectShape implements IShape {
     if (degrees) {
       newX = image.height - (height + y);
       newY = image.width - (width + x);
-      const radians = toRadians(degrees);
+      // const radians = toRadians(degrees);
       // const newX = height + y - image.height;
       // const newY = width + x - image.width;
-      const originX = x + width / 2;
-      const originY = y + height / 2;
+      // const originX = x + width / 2;
+      // const originY = y + height / 2;
       // canvas2D.save(); // saves current transformation matrix (state)
-      canvas2D.translate(originX, originY);
+      /*  canvas2D.translate(originX, originY);
       canvas2D.rotate(radians);
-      canvas2D.translate(-originX, -originY);
+      canvas2D.translate(-originX, -originY); */
       /* const centerX = image.width;
       const centerY = image.height; */
       /*  const newX =
