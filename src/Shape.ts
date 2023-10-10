@@ -157,17 +157,16 @@ export class RectShape implements IShape {
     canvas2D.shadowColor = shapeShadowStyle;
     canvas2D.strokeStyle = shapeStrokeStyle;
     canvas2D.lineWidth = lineWidth;
-
+    const originX = x + width / 2;
+    const originY = y + height / 2;
     if (degrees) {
       const radians = toRadians(degrees);
-      const newX = height + y - image.height;
-      const newY = width + x - image.width;
-      const originX = x + width / 2;
-      const originY = y + height / 2;
+      // const newX = height + y - image.height;
+      // const newY = width + x - image.width;
+
       canvas2D.save(); // saves current transformation matrix (state)
       canvas2D.translate(originX, originY);
       canvas2D.rotate(radians);
-      canvas2D.translate(-newX, -newY);
       /* const centerX = image.width;
       const centerY = image.height; */
       /*  const newX =
@@ -213,6 +212,9 @@ export class RectShape implements IShape {
         canvas2D.fillText(comment, x + padding, y + padding);
       } else {
       } */
+    }
+    if (degrees) {
+      canvas2D.translate(-originX, -originY);
     }
     canvas2D.restore();
 
