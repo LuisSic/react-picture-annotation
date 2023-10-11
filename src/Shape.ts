@@ -159,12 +159,14 @@ export class RectShape implements IShape {
     canvas2D.lineWidth = lineWidth;
     let newX = x;
     let newY = y;
+    const newWidth = width;
+    const newHeight = height;
     if (degrees) {
-      // newY = image.height - (height + y);
-      // newX = image.width - (width + x);
-      const radians = toRadians(degrees);
-      const centerX = image.width / 2;
-      const centerY = image.height / 2;
+      newX = image.height - (height + y);
+      newY = image.width - (width + x);
+      // const radians = toRadians(degrees);
+      // const centerX = image.width / 2;
+      // const centerY = image.height / 2;
       /*   newX =
         centerX +
         (newX - centerX) * Math.cos(radians) -
@@ -173,10 +175,10 @@ export class RectShape implements IShape {
         centerY +
         (newX - centerX) * Math.sin(radians) +
         (newY - centerY) * Math.cos(radians); */
-      newX = newX * Math.cos(radians) - newY * Math.sin(radians);
-      newY = newX * Math.cos(radians) + newY * Math.sin(radians);
-      newX = newX + centerX;
-      newY = newY + centerY;
+      // newX = newX * Math.cos(radians) - newY * Math.sin(radians);
+      // newY = newX * Math.cos(radians) + newY * Math.sin(radians);
+      // newX = newX + centerX;
+      // newY = newY + centerY;
 
       // const newX = height + y - image.height;
       // const newY = width + x - image.width;
@@ -188,6 +190,7 @@ export class RectShape implements IShape {
       // canvas2D.rotate(radians);
       // canvas2D.translate(-originX, -originY);
       canvas2D.arc(0, 0, 10, 0, Math.PI * 2);
+      canvas2D.arc(newX, newY, 10, 0, Math.PI * 2);
       /* const centerX = image.width;
       const centerY = image.height; */
       /*  const newX =
@@ -203,19 +206,19 @@ export class RectShape implements IShape {
       // const newX = height + y - image.height;
       // const newY = width + x - image.width;
 
-      canvas2D.strokeRect(newX, newY, width, height);
+      canvas2D.strokeRect(newX, newY, newWidth, newHeight);
     } else {
-      canvas2D.strokeRect(newX, newY, width, height);
+      canvas2D.strokeRect(newX, newY, newWidth, newHeight);
     }
 
     // canvas2D.restore();
 
     if (selected) {
       canvas2D.fillStyle = shapeBackground;
-      canvas2D.fillRect(newX, newY, width, height);
+      canvas2D.fillRect(newX, newY, newWidth, newHeight);
     } else {
       canvas2D.fillStyle = initShapeBackground;
-      canvas2D.fillRect(newX, newY, width, height);
+      canvas2D.fillRect(newX, newY, newWidth, newHeight);
       /*  const { comment } = this.annotationData;
       if (comment) {
         canvas2D.font = `${fontSize}px ${fontFamily}`;
