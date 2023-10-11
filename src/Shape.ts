@@ -230,7 +230,7 @@ export class RectShape implements IShape {
       } else {
       } */
     }
-
+    canvas2D.fill();
     canvas2D.restore();
 
     return { x, y, width, height };
