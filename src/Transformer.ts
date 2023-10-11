@@ -1,5 +1,5 @@
 import { IShape, IShapeBase } from "Shape";
-import { toRadians } from "utils/utils";
+import { toRadians } from "./utils/utils";
 export interface ITransformer {
   checkBoundary: (positionX: number, positionY: number) => boolean;
   startTransformation: (positionX: number, positionY: number) => void;
