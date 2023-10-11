@@ -1,6 +1,6 @@
 {
   "name": "@blackteam/react-picture-annotation",
-  "version": "0.1.97",
+  "version": "0.1.98",
   "description": "A simple annotation component.",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
