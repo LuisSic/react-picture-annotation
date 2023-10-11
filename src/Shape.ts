@@ -210,6 +210,8 @@ export class RectShape implements IShape {
 
       canvas2D.strokeRect(newX, newY, newWidth, newHeight);
     } else {
+      canvas2D.arc(0, 0, 10, 0, Math.PI * 2);
+      canvas2D.arc(newX, newY, 10, 0, Math.PI * 2);
       canvas2D.strokeRect(newX, newY, newWidth, newHeight);
     }
 
