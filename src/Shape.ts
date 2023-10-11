@@ -1,5 +1,5 @@
 import { IAnnotation } from "./Annotation";
-// import { toRadians } from "./utils/utils";
+import { toRadians } from "./utils/utils";
 
 export const defaultShapeStyle: IShapeStyle = {
   padding: 5,
@@ -75,6 +75,10 @@ export interface IShape {
     image: {
       width: number;
       height: number;
+    },
+    canvas: {
+      width: number;
+      height: number;
     }
   ) => IShapeBase;
   getAnnotationData: () => IAnnotation;
@@ -137,6 +141,10 @@ export class RectShape implements IShape {
     image: {
       width: number;
       height: number;
+    },
+    canvas: {
+      width: number;
+      height: number;
     }
   ) => {
     const { x, y, width, height } = calculateTruePosition(
@@ -159,16 +167,16 @@ export class RectShape implements IShape {
     canvas2D.lineWidth = lineWidth;
     let newX = x;
     let newY = y;
-    let newWidth = width;
-    let newHeight = height;
+    const newWidth = width;
+    const newHeight = height;
     if (degrees) {
-      newX = image.height - (height + y);
-      newY = image.width - (width + x);
-      newWidth = height;
-      newHeight = width;
-      // const radians = toRadians(degrees);
-      // const centerX = image.width / 2;
-      // const centerY = image.height / 2;
+      // newX = image.height - (height + y);
+      // newY = image.width - (width + x);
+      // newWidth = height;
+      // newHeight = width;
+      const radians = toRadians(degrees);
+      const centerX = image.width / 2;
+      const centerY = image.height / 2;
       /*   newX =
         centerX +
         (newX - centerX) * Math.cos(radians) -
@@ -177,20 +185,20 @@ export class RectShape implements IShape {
         centerY +
         (newX - centerX) * Math.sin(radians) +
         (newY - centerY) * Math.cos(radians); */
-      // newX = newX * Math.cos(radians) - newY * Math.sin(radians);
-      // newY = newX * Math.cos(radians) + newY * Math.sin(radians);
-      // newX = newX + centerX;
-      // newY = newY + centerY;
+      newX = newX * Math.cos(radians) - newY * Math.sin(radians);
+      newY = newX * Math.cos(radians) + newY * Math.sin(radians);
+      newX = newX + centerX;
+      newY = newY + centerY;
 
       // const newX = height + y - image.height;
       // const newY = width + x - image.width;
-      // const originX = x + width / 2;
-      // const originY = y + height / 2;
+      const originX = x + width / 2;
+      const originY = y + height / 2;
       // canvas2D.save(); // saves current transformation matrix (state)
       // canvas2D.arc(0, 0, 10, 0, Math.PI * 2);
-      // canvas2D.translate(originX, originY);
-      // canvas2D.rotate(radians);
-      // canvas2D.translate(-originX, -originY);
+      canvas2D.translate(canvas.width / 2, canvas.height / 2);
+      canvas2D.rotate(radians);
+      canvas2D.translate(-originX, -originY);
       canvas2D.arc(0, 0, 10, 0, Math.PI * 2);
       canvas2D.arc(newX, newY, 10, 0, Math.PI * 2);
       /* const centerX = image.width;
@@ -210,8 +218,8 @@ export class RectShape implements IShape {
 
       canvas2D.strokeRect(newX, newY, newWidth, newHeight);
     } else {
-      canvas2D.arc(0, 0, 10, 0, Math.PI * 2);
-      canvas2D.arc(newX, newY, 10, 0, Math.PI * 2);
+      // canvas2D.arc(0, 0, 10, 0, Math.PI * 2);
+      // canvas2D.arc(newX, newY, 10, 0, Math.PI * 2);
       canvas2D.strokeRect(newX, newY, newWidth, newHeight);
     }
 

@@ -257,6 +257,10 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
             width: this.currentImageElement?.width ?? 0 * this.scaleState.scale,
             height:
               this.currentImageElement?.height ?? 0 * this.scaleState.scale,
+          },
+          {
+            width: this.props.width,
+            height: this.props.height,
           }
         );
 
