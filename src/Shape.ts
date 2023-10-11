@@ -159,11 +159,13 @@ export class RectShape implements IShape {
     canvas2D.lineWidth = lineWidth;
     let newX = x;
     let newY = y;
-    const newWidth = width;
-    const newHeight = height;
+    let newWidth = width;
+    let newHeight = height;
     if (degrees) {
-      newX = image.height - (height + y);
-      newY = image.width - (width + x);
+      newX = canvas2D.canvas.height - (height + y);
+      newY = canvas2D.canvas.width - (width + x);
+      newWidth = height;
+      newHeight = width;
       // const radians = toRadians(degrees);
       // const centerX = image.width / 2;
       // const centerY = image.height / 2;
