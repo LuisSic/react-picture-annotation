@@ -95,7 +95,7 @@ export default class Transformer implements ITransformer {
       canvas2D.fillRect(x, y, width, height);
     }
 
-    canvas2D.restore();
+    // canvas2D.restore();
   };
 
   private getCenterIndexByCursor = (positionX: number, positionY: number) => {
