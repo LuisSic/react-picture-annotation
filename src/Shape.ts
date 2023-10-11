@@ -165,8 +165,8 @@ export class RectShape implements IShape {
     canvas2D.shadowColor = shapeShadowStyle;
     canvas2D.strokeStyle = shapeStrokeStyle;
     canvas2D.lineWidth = lineWidth;
-    let newX = x;
-    let newY = y;
+    const newX = x;
+    const newY = y;
     const newWidth = width;
     const newHeight = height;
     if (degrees) {
@@ -175,8 +175,8 @@ export class RectShape implements IShape {
       // newWidth = height;
       // newHeight = width;
       const radians = toRadians(degrees);
-      const centerX = image.width / 2;
-      const centerY = image.height / 2;
+      // const centerX = image.width / 2;
+      // const centerY = image.height / 2;
       /*   newX =
         centerX +
         (newX - centerX) * Math.cos(radians) -
@@ -185,10 +185,10 @@ export class RectShape implements IShape {
         centerY +
         (newX - centerX) * Math.sin(radians) +
         (newY - centerY) * Math.cos(radians); */
-      newX = newX * Math.cos(radians) - newY * Math.sin(radians);
-      newY = newX * Math.cos(radians) + newY * Math.sin(radians);
-      newX = newX + centerX;
-      newY = newY + centerY;
+      // newX = newX * Math.cos(radians) - newY * Math.sin(radians);
+      // newY = newX * Math.cos(radians) + newY * Math.sin(radians);
+      // newX = newX + centerX;
+      // newY = newY + centerY;
 
       // const newX = height + y - image.height;
       // const newY = width + x - image.width;
