@@ -157,32 +157,32 @@ export class RectShape implements IShape {
     canvas2D.shadowColor = shapeShadowStyle;
     canvas2D.strokeStyle = shapeStrokeStyle;
     canvas2D.lineWidth = lineWidth;
-    const newX = x;
-    const newY = y;
+    let newX = x;
+    let newY = y;
     if (degrees) {
       // newY = image.height - (height + y);
       // newX = image.width - (width + x);
       const radians = toRadians(degrees);
-      // const centerX = canvas2D.canvas.width / 2;
-      // const centerY = canvas2D.canvas.height / 2;
-      /*  newX =
+      const centerX = canvas2D.canvas.width / 2;
+      const centerY = canvas2D.canvas.height / 2;
+      newX =
         centerX +
         (newX - centerX) * Math.cos(radians) -
         (newY - centerY) * Math.sin(radians);
       newY =
         centerY +
         (newX - centerX) * Math.sin(radians) +
-        (newY - centerY) * Math.cos(radians); */
+        (newY - centerY) * Math.cos(radians);
 
       // const newX = height + y - image.height;
       // const newY = width + x - image.width;
-      const originX = x + width / 2;
-      const originY = y + height / 2;
+      // const originX = x + width / 2;
+      // const originY = y + height / 2;
       // canvas2D.save(); // saves current transformation matrix (state)
-      canvas2D.arc(0, 0, 10, 0, Math.PI * 2);
-      canvas2D.translate(originX, originY);
-      canvas2D.rotate(radians);
-      canvas2D.translate(-originX, -originY);
+      // canvas2D.arc(0, 0, 10, 0, Math.PI * 2);
+      // canvas2D.translate(originX, originY);
+      // canvas2D.rotate(radians);
+      // canvas2D.translate(-originX, -originY);
       canvas2D.arc(0, 0, 10, 0, Math.PI * 2);
       /* const centerX = image.width;
       const centerY = image.height; */
