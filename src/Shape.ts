@@ -165,14 +165,18 @@ export class RectShape implements IShape {
       const radians = toRadians(degrees);
       const centerX = image.width / 2;
       const centerY = image.height / 2;
-      newX =
+      /*   newX =
         centerX +
         (newX - centerX) * Math.cos(radians) -
         (newY - centerY) * Math.sin(radians);
       newY =
         centerY +
         (newX - centerX) * Math.sin(radians) +
-        (newY - centerY) * Math.cos(radians);
+        (newY - centerY) * Math.cos(radians); */
+      newX = newX * Math.cos(radians) - newY * Math.sin(radians);
+      newY = newX * Math.cos(radians) + newY * Math.sin(radians);
+      newX = newX + centerX;
+      newY = newY + centerY;
 
       // const newX = height + y - image.height;
       // const newY = width + x - image.width;
