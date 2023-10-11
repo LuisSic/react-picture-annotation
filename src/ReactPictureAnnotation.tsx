@@ -243,21 +243,11 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
       for (const item of this.shapes) {
         const isSelected = item.getAnnotationData().id === this.selectedId;
 
-        // const xImage = this.currentImageElement?.width ?? 0;
-        // const yImage = this.currentImageElement?.height ?? 0;
-        // const newOriginX = xImage + this.scaleState.originX;
-        // const newOriginY = yImage + this.scaleState.originY;
-
         const { x, y, height } = item.paint(
           this.canvas2D,
           this.calculateShapePosition,
           isSelected,
           this.props.degrees ?? 0,
-          {
-            width: this.currentImageElement?.width ?? 0 * this.scaleState.scale,
-            height:
-              this.currentImageElement?.height ?? 0 * this.scaleState.scale,
-          },
           {
             width: this.props.width,
             height: this.props.height,
@@ -280,7 +270,12 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
           this.currentTransformer.paint(
             this.canvas2D,
             this.calculateShapePosition,
-            this.scaleState.scale
+            this.scaleState.scale,
+            this.props.degrees ?? 0,
+            {
+              width: this.props.width,
+              height: this.props.height,
+            }
           );
 
           this.setState({

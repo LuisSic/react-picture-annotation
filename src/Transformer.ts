@@ -1,4 +1,5 @@
 import { IShape, IShapeBase } from "Shape";
+import { toRadians } from "utils/utils";
 export interface ITransformer {
   checkBoundary: (positionX: number, positionY: number) => boolean;
   startTransformation: (positionX: number, positionY: number) => void;
@@ -6,7 +7,12 @@ export interface ITransformer {
   paint: (
     canvas2D: CanvasRenderingContext2D,
     calculateTruePosition: (shapeData: IShapeBase) => IShapeBase,
-    scale: number
+    scale: number,
+    degrees: number,
+    canvas: {
+      width: number;
+      height: number;
+    }
   ) => void;
   shapeId: string;
 }
@@ -58,12 +64,24 @@ export default class Transformer implements ITransformer {
   public paint = (
     canvas2D: CanvasRenderingContext2D,
     calculateTruePosition: (shapeData: IShapeBase) => IShapeBase,
-    scale: number
+    scale: number,
+    degrees: number,
+    canvas: {
+      width: number;
+      height: number;
+    }
   ) => {
     this.scale = scale;
 
     const allCentersTable = this.getAllCentersTable();
     canvas2D.save();
+
+    if (degrees) {
+      const radians = toRadians(degrees);
+      canvas2D.translate(canvas.width / 2, canvas.height / 2);
+      canvas2D.rotate(radians);
+      canvas2D.translate(-canvas.width / 2, -canvas.height / 2);
+    }
     canvas2D.fillStyle = this.shape.shapeStyle.transformerBackground;
 
     for (const item of allCentersTable) {

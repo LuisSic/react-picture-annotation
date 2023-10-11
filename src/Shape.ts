@@ -72,10 +72,6 @@ export interface IShape {
     calculateTruePosition: (shapeData: IShapeBase) => IShapeBase,
     selected: boolean,
     degrees: number,
-    image: {
-      width: number;
-      height: number;
-    },
     canvas: {
       width: number;
       height: number;
@@ -138,10 +134,6 @@ export class RectShape implements IShape {
     calculateTruePosition: (shapeData: IShapeBase) => IShapeBase,
     selected: boolean,
     degrees: number,
-    _image: {
-      width: number;
-      height: number;
-    },
     canvas: {
       width: number;
       height: number;
@@ -170,60 +162,15 @@ export class RectShape implements IShape {
     const newWidth = width;
     const newHeight = height;
     if (degrees) {
-      // newX = image.height - (height + y);
-      // newY = image.width - (width + x);
-      // newWidth = height;
-      // newHeight = width;
       const radians = toRadians(degrees);
-      // const centerX = image.width / 2;
-      // const centerY = image.height / 2;
-      /*   newX =
-        centerX +
-        (newX - centerX) * Math.cos(radians) -
-        (newY - centerY) * Math.sin(radians);
-      newY =
-        centerY +
-        (newX - centerX) * Math.sin(radians) +
-        (newY - centerY) * Math.cos(radians); */
-      // newX = newX * Math.cos(radians) - newY * Math.sin(radians);
-      // newY = newX * Math.cos(radians) + newY * Math.sin(radians);
-      // newX = newX + centerX;
-      // newY = newY + centerY;
-
-      // const newX = height + y - image.height;
-      // const newY = width + x - image.width;
-      // const originX = x + width / 2;
-      // const originY = y + height / 2;
-      // canvas2D.save(); // saves current transformation matrix (state)
-      // canvas2D.arc(0, 0, 10, 0, Math.PI * 2);
       canvas2D.translate(canvas.width / 2, canvas.height / 2);
       canvas2D.rotate(radians);
       canvas2D.translate(-canvas.width / 2, -canvas.height / 2);
-      // canvas2D.arc(0, 0, 10, 0, Math.PI * 2);
-      // canvas2D.arc(newX, newY, 10, 0, Math.PI * 2);
-      /* const centerX = image.width;
-      const centerY = image.height; */
-      /*  const newX =
-        centerX +
-        (x - centerX) * Math.cos(radians) -
-        (y - centerY) * Math.sin(radians);
-
-      const newY =
-        centerY +
-        (x - centerX) * Math.sin(radians) +
-        (y - centerY) * Math.cos(radians); */
-      // console.log('🚀 ~ file: Shape.ts:178 ~ RectShape ~ newY:', newY);
-      // const newX = height + y - image.height;
-      // const newY = width + x - image.width;
 
       canvas2D.strokeRect(newX, newY, newWidth, newHeight);
     } else {
-      // canvas2D.arc(0, 0, 10, 0, Math.PI * 2);
-      // canvas2D.arc(newX, newY, 10, 0, Math.PI * 2);
       canvas2D.strokeRect(newX, newY, newWidth, newHeight);
     }
-
-    // canvas2D.restore();
 
     if (selected) {
       canvas2D.fillStyle = shapeBackground;
@@ -231,25 +178,8 @@ export class RectShape implements IShape {
     } else {
       canvas2D.fillStyle = initShapeBackground;
       canvas2D.fillRect(newX, newY, newWidth, newHeight);
-      /*  const { comment } = this.annotationData;
-      if (comment) {
-        canvas2D.font = `${fontSize}px ${fontFamily}`;
-        const metrics = canvas2D.measureText(comment);
-        canvas2D.save();
-        canvas2D.fillStyle = shapeBackground;
-        canvas2D.fillRect(
-          x,
-          y,
-          metrics.width + padding * 2,
-          fontSize + padding * 2
-        );
-        canvas2D.textBaseline = 'top';
-        canvas2D.fillStyle = fontColor;
-        canvas2D.fillText(comment, x + padding, y + padding);
-      } else {
-      } */
     }
-    canvas2D.fill();
+
     canvas2D.restore();
 
     return { x, y, width, height };
