@@ -134,7 +134,7 @@ export class RectShape implements IShape {
     calculateTruePosition: (shapeData: IShapeBase) => IShapeBase,
     selected: boolean,
     degrees: number,
-    _image: {
+    image: {
       width: number;
       height: number;
     }
@@ -162,8 +162,8 @@ export class RectShape implements IShape {
     let newWidth = width;
     let newHeight = height;
     if (degrees) {
-      newX = canvas2D.canvas.height - (height + y);
-      newY = canvas2D.canvas.width - (width + x);
+      newX = image.height - (height + y);
+      newY = image.width - (width + x);
       newWidth = height;
       newHeight = width;
       // const radians = toRadians(degrees);
