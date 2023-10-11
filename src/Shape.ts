@@ -1,5 +1,5 @@
 import { IAnnotation } from "./Annotation";
-import { toRadians } from "./utils/utils";
+// import { toRadians } from "./utils/utils";
 
 export const defaultShapeStyle: IShapeStyle = {
   padding: 5,
