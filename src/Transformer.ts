@@ -1,5 +1,5 @@
 import { IShape, IShapeBase } from "Shape";
-// import { toRadians } from './utils/utils';
+import { toRadians } from "./utils/utils";
 export interface ITransformer {
   checkBoundary: (positionX: number, positionY: number) => boolean;
   startTransformation: (positionX: number, positionY: number) => void;
@@ -66,7 +66,7 @@ export default class Transformer implements ITransformer {
     calculateTruePosition: (shapeData: IShapeBase) => IShapeBase,
     scale: number,
     degrees: number,
-    _canvas: {
+    canvas: {
       width: number;
       height: number;
     }
@@ -77,10 +77,10 @@ export default class Transformer implements ITransformer {
     canvas2D.save();
 
     if (degrees) {
-      // const radians = toRadians(degrees);
-      // canvas2D.translate(canvas.width / 2, canvas.height / 2);
-      // canvas2D.rotate(radians);
-      // canvas2D.translate(-canvas.width / 2, -canvas.height / 2);
+      const radians = toRadians(degrees);
+      canvas2D.translate(canvas.width / 2, canvas.height / 2);
+      canvas2D.rotate(radians);
+      canvas2D.translate(-canvas.width / 2, -canvas.height / 2);
     }
     canvas2D.fillStyle = this.shape.shapeStyle.transformerBackground;
 

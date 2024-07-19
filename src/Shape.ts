@@ -1,5 +1,5 @@
 import { IAnnotation } from "./Annotation";
-// import { toRadians } from './utils/utils';
+import { toRadians } from "./utils/utils";
 
 export const defaultShapeStyle: IShapeStyle = {
   padding: 5,
@@ -134,7 +134,7 @@ export class RectShape implements IShape {
     calculateTruePosition: (shapeData: IShapeBase) => IShapeBase,
     selected: boolean,
     degrees: number,
-    _canvas: {
+    canvas: {
       width: number;
       height: number;
     }
@@ -162,10 +162,10 @@ export class RectShape implements IShape {
     const newWidth = width;
     const newHeight = height;
     if (degrees) {
-      // const radians = toRadians(degrees);
-      // canvas2D.translate(canvas.width / 2, canvas.height / 2);
-      // canvas2D.rotate(radians);
-      // canvas2D.translate(-canvas.width / 2, -canvas.height / 2);
+      const radians = toRadians(degrees);
+      canvas2D.translate(canvas.width / 2, canvas.height / 2);
+      canvas2D.rotate(radians);
+      canvas2D.translate(-canvas.width / 2, -canvas.height / 2);
 
       canvas2D.strokeRect(newX, newY, newWidth, newHeight);
     } else {

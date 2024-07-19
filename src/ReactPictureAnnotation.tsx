@@ -404,7 +404,7 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
           const newOriginX = x + originX;
           const newOriginY = y + originY;
           const radians = toRadians(this.props.degrees);
-          // this.imageCanvas2D.save(); // saves current transformation matrix (state)
+          this.imageCanvas2D.save(); // saves current transformation matrix (state)
           this.imageCanvas2D.translate(+canvasWidth / 2, +canvasHeight / 2);
           this.imageCanvas2D.scale(scale, scale);
           this.imageCanvas2D.rotate(radians); // rotates the image around origin point by used translations
@@ -415,7 +415,7 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
             originX,
             originY
           ); // draws the image in the position (imageX, imageY)
-          // this.imageCanvas2D.restore(); //
+          this.imageCanvas2D.restore(); //
           this.onShapeChange();
         } else {
           // const { originX, originY } = this.scaleState;
@@ -513,6 +513,7 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
 
     const { scale: preScale } = this.scaleState;
     this.scaleState.scale += event.deltaY * this.props.scrollSpeed;
+    console.log("🚀 ~ ReactPictureAnnotation ~ event.deltaY:", event.deltaY);
     if (this.scaleState.scale > 10) {
       this.scaleState.scale = 10;
     }
@@ -522,11 +523,18 @@ export default class ReactPictureAnnotation extends React.Component<IReactPictur
 
     const { originX, originY, scale } = this.scaleState;
     const { offsetX, offsetY } = event.nativeEvent;
+    console.log(
+      "🚀 ~ ReactPictureAnnotation ~ event.nativeEvent:",
+      event.nativeEvent
+    );
     this.scaleState.originX =
       offsetX - ((offsetX - originX) / preScale) * scale;
     this.scaleState.originY =
       offsetY - ((offsetY - originY) / preScale) * scale;
-
+    console.log(
+      "🚀 ~ ReactPictureAnnotation ~ this.scaleState:",
+      this.scaleState
+    );
     this.setState({ imageScale: this.scaleState });
 
     requestAnimationFrame(() => {
